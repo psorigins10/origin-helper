@@ -1,0 +1,81 @@
+
+# ==============================
+# CMake / C++ build artifacts
+# ==============================
+/build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+compile_commands.json
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.out
+
+# ==============================
+# Test and coverage output
+# ==============================
+Testing/
+coverage/
+*.gcda
+*.gcno
+*.profraw
+*.profdata
+
+# ==============================
+# Flutter / Dart generated files
+# ==============================
+ui/.dart_tool/
+ui/.packages
+ui/.flutter-plugins
+ui/.flutter-plugins-dependencies
+ui/build/
+ui/.metadata
+ui/linux/flutter/ephemeral/
+ui/linux/flutter/generated_plugin_registrant.cc
+ui/linux/flutter/generated_plugin_registrant.h
+ui/linux/flutter/generated_plugins.cmake
+
+# Keep dependency lockfiles tracked for reproducible builds
+# Keep ui/pubspec.lock
+
+# ==============================
+# Editors and IDEs
+# ==============================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ==============================
+# Logs and temporary files
+# ==============================
+*.log
+*.tmp
+*.temp
+*.bak
+
+# ==============================
+# Local environment / secrets
+# ==============================
+.env
+.env.*
+!.env.example
+*.local
+
+# ==============================
+# OS-specific files
+# ==============================
+.directory
+.Trash-*
