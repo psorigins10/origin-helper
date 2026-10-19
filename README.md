@@ -1,53 +1,34 @@
-# ORIGIN Helper
+# ORIGIN Flutter power profile bridge — integration files
 
-A C++20 laptop hardware management utility for Linux, designed with a
-modular architecture and a long-term goal of integration with ORIGIN OS.
+This archive contains:
+- Updated root CMakeLists.txt (adds src/power/power_profile.cpp to origin-core)
+- `include/origin/power/power_profile.hpp`
+- `src/power/power_profile.cpp`
+- Dart MethodChannel helper snippet
 
-## Current status
+## Critical: GTK runner integration remains a targeted edit
+Your `ui/linux/runner/my_application.cc` was not included in the user-provided output,
+so this archive does not overwrite it with a guessed version. Register the channel
+there using Flutter's generated `FlMethodChannel` API and the channel name
+`com.origin.helper/power`, with methods `getPowerProfile` and `setPowerProfile`.
+The handler should call `origin::PowerProfile::get()` / `.set()` and return a
+Map containing `active`, `available`, `supported`, and optionally `error`.
 
-Early development: version 0.1.0.
+Add the repo's `include/` and `src/` files to their matching paths, and replace the
+root CMakeLists.txt. The Linux runner's `ui/linux/runner/CMakeLists.txt` must link
+`origin-core` and include the repository's `include` directory; use paths relative
+to `${CMAKE_CURRENT_SOURCE_DIR}`:
+```cmake
+target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../include")
+target_link_directories(${BINARY_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../build")
+target_link_libraries(${BINARY_NAME} PRIVATE origin-core)
+```
+This linking pattern assumes `origin-core` has already been built in the root `build`
+directory and is not robust for Flutter's independent build directory. Prefer adding
+the repo root as a subdirectory from the runner CMake or using an explicit imported
+library target; adjust to the actual runner CMake before applying.
 
-Currently implemented:
-- Linux distribution identification via `/etc/os-release`
-- CPU identification via `/proc/cpuinfo`
-- Battery discovery and charge percentage via sysfs
-- Version reporting
-- Initial automated test target
-
-Hardware controls are not implemented yet. Battery charging limits,
-performance profiles, fan control, and GPU controls will only be added
-after verifying hardware and driver support.
-
-## Requirements
-
-- Linux
-- C++20 compiler
-- CMake 3.20+
-- Make or Ninja
-
-On Arch Linux:
-
-    sudo pacman -S --needed base-devel cmake
-
-## Build
-
-    cmake -S . -B build
-    cmake --build build
-
-## Run
-
-    ./build/origin-helper
-    ./build/origin-helper --version
-
-## Test
-
-    ctest --test-dir build --output-on-failure
-
-## Safety
-
-The initial version only reads system information. It does not modify
-hardware settings or write to privileged system interfaces.
-
-## License
-
-This project is intended to use the Apache License 2.0. See LICENSE.
+## Permissions
+Never run Flutter as root and never make sysfs world-writable. A write failure should
+be surfaced in the UI. If write access is denied, add a narrowly scoped privileged
+helper later.
