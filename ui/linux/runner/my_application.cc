@@ -1,11 +1,13 @@
 #include "my_application.h"
-
+#include "origin/power/power_profile.hpp"
 #include <flutter_linux/flutter_linux.h>
+#include <string>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
 
 #include "flutter/generated_plugin_registrant.h"
+#include "power_profile_channel.inc"
 
 struct _MyApplication {
   GtkApplication parent_instance;
@@ -74,6 +76,7 @@ static void my_application_activate(GApplication* application) {
   gtk_widget_realize(GTK_WIDGET(view));
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
+  register_power_channel(view);
 
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
